@@ -1,9 +1,40 @@
+import ddf.minim.spi.*;
+import ddf.minim.signals.*;
+import ddf.minim.*;
+import ddf.minim.analysis.*;
+import ddf.minim.ugens.*;
+import ddf.minim.effects.*;
+
+Minim minim;
+AudioInput in;
+
 void setup()
 {
-  size(500,500);
+  size(500, 500);
+
+  minim = new Minim(this);
+
+  in = minim.getLineIn(Minim.MONO, width, 44100, 16);
 }
+
+
 
 void draw()
 {
-  
+  background(255, 0);
+  stroke(random(255), random(255), random(255));
+  float mid = height /2;
+  float total = 0.0f;
+  for (int i = 0; i < in.bufferSize (); i ++)
+  {
+    line(i, mid, i, mid + in.left.get(i) * 250);
+    println(i);
+    total += abs(in.left.get(i));
+    
+  }
+  float average = total / in.bufferSize();
+  fill(0);
+  line(10,20,10+(average * 500), 20);
+  text("Average: " + average, 10, 20);
 }
+
